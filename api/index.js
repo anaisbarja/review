@@ -7,3 +7,4 @@ import customers from "./customers.js"
 apiRouter.use("/customers", customers)
 
 
+export default apiRouter

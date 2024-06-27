@@ -27,13 +27,13 @@ app.get("/",(req,res)=>{
 
 // const {getAllCustomers} = require("./db")
 
-import {getAllCustomers} from "./db/customers.js"
+// import {getAllCustomers} from "./db/customers.js"
 
-app.get("/customers",async(req,res)=>{
-    const allCustomers = await getAllCustomers()
-    console.log(allCustomers)
-    res.send(allCustomers)
-})
+// app.get("/customers",async(req,res)=>{
+//     const allCustomers = await getAllCustomers()
+//     console.log(allCustomers)
+//     res.send(allCustomers)
+// })
 // app.get("/customers/info",(req,res)=>{
 //     res.send("you are on customers route")
 // })
@@ -45,6 +45,18 @@ app.get("/customers",async(req,res)=>{
 // })
 
 // more here later
+
+import apiRouter from "./api/index.js"
+app.use("/api", apiRouter)
+
+// route path so far >> /api/customers
+// /layer1/layer2
+
+
+// cart
+// /api/customers/cart
+// /api/admin/create
+// /api
 
 app.listen(8080, ()=>{
     console.log("Server is up and running :D")
