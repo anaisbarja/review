@@ -3,6 +3,13 @@
 // 1. Setup
 import express from 'express';
 const app = express()
+// json web token
+import jwt from "jsonwebtoken"
+
+// secret for encrytion
+const jwt_secret = "pwefpfwejwje"
+import { getCustomerByUsername} from "./db/customers.js"
+
 
 // parse objects
 app.use(express.json())
@@ -47,10 +54,56 @@ app.get("/",(req,res)=>{
 // more here later
 
 import apiRouter from "./api/index.js"
+
+
+// middleware
+// should not break with missing auth header
+app.use(async(req,res,next)=>{
+    console.log("this is my middleware")
+    const prefix = "Bearer "
+    const auth = req.header("Authorization")
+
+    if(!auth){
+        console.log("no auth header")
+        // next()
+    }
+    else{
+        // console.log(auth)
+        const token = auth.slice(prefix.length)
+        console.log(token)
+    
+        // parsing token (decipher)
+        const parsedToken = jwt.verify(token, jwt_secret)
+        console.log(parsedToken)
+        // next()
+
+        const username = parsedToken.username
+        console.log(username)
+
+        try{
+            // verify user
+            const customer = await getCustomerByUsername(username)
+
+            // storing user object in request (for future use)
+            if(customer){
+                req.user = customer
+                console.log("successfully stored customer object")
+            }
+        }
+        catch(err){
+            console.log("failed to get user", err)
+        }
+        // next()
+    }
+    next()
+
+})
+
 app.use("/api", apiRouter)
 
 // route path so far >> /api/customers
 // /layer1/layer2
+
 
 
 // cart
